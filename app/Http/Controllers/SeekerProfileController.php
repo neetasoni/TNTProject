@@ -244,7 +244,7 @@ class SeekerProfileController extends Controller
                 array_push($galleryImgPath,$this->uploadGalleryImage($gImg));
             }
             
-            DB::table('seekerProfile')->where('id',$postData['id'])
+            $resp = DB::table('seekerProfile')->where('id',$postData['id'])
             ->update([
                 'name' => $postData['name'] ,
                 'location' => $postData['location'] ,
@@ -255,7 +255,10 @@ class SeekerProfileController extends Controller
                 'number'=>$postData['number'] ,
                 'updated_at'=>date('Y-m-d')
             ]);
-            $rslReturn=array("msg"=>'Data Updated Successfully');
+            if($resp >= 1)
+                $rslReturn=array("msg"=>'Data Updated Successfully');
+            else
+                $rslReturn=array("msg"=>'Data Not Updated Successfully');
             return $this->respondSuccess($rslReturn);
 
         }
@@ -291,9 +294,12 @@ class SeekerProfileController extends Controller
     
         try
         {            
-            DB::table('seekerProfile')->where('id',$postData['id'])
+            $resp = DB::table('seekerProfile')->where('id',$postData['id'])
             ->delete();
-            $rslReturn=array("msg"=>'Data Deleted Successfully');
+            if($resp >= 1)
+                $rslReturn=array("msg"=>'Data Deleted Successfully');
+            else
+                $rslReturn=array("msg"=>'Data Not Deleted Successfully');
             return $this->respondSuccess($rslReturn);
         }
         catch(\exception $e)
